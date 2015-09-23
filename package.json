@@ -1,0 +1,32 @@
+{
+  "name": "gulp-file-assets",
+  "version": "1.0.0",
+  "description": "A gulp plugin to extract file assets.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lanfei/gulp-file-assets.git"
+  },
+  "keywords": [
+    "gulpplugin",
+    "asset",
+    "assets"
+  ],
+  "author": "Lanfei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lanfei/gulp-file-assets/issues"
+  },
+  "homepage": "https://github.com/Lanfei/gulp-file-assets#readme",
+  "dependencies": {
+    "gulp-util": "^3.0.6",
+    "through2": "^2.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "should": "^7.1.0"
+  }
+}
