@@ -37,7 +37,7 @@ Asset types to be extracted.
 
 Type: `Object`
 Default:
-```json
+```js
 {
 	js: ['js'],
 	css: ['css'],
@@ -48,7 +48,7 @@ Default:
 
 You can also extend by yourself:
 
-```json
+```js
 {
 	js: ['js'],
 	css: ['css'],
