@@ -50,10 +50,6 @@ You can also extend by yourself:
 
 ```js
 {
-	js: ['js'],
-	css: ['css'],
-	page: ['html', 'tpl'],
-	img: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
 	text: ['md', 'txt']
 }
 ```
