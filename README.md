@@ -28,7 +28,7 @@ gulp.task('default', function(){
 
 ## Example
 
-index.html
+### index.html
 
 ```html
 <!doctype html>
@@ -43,7 +43,7 @@ index.html
 </html>
 ```
 
-style.css
+### style.css
 
 ```css
 #logo {
@@ -51,7 +51,7 @@ style.css
 }
 ```
 
-gulpfile.js
+### gulpfile.js
 
 ```js
 var gulp = require('gulp');
