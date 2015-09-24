@@ -13,16 +13,58 @@ $ npm install --save-dev gulp-file-assets
 Then, add it to your `gulpfile.js`:
 
 ```js
+var gulp = require('gulp');
 var fileAssets = require('gulp-file-assets');
 
 gulp.task('default', function(){
-  gulp.src('index.html')
-    .pipe(fileAssets())
-    .pipe(gulp.dest('build'));
+	return gulp
+		.src('index.html')
+		.pipe(fileAssets())
+		.pipe(gulp.dest('build'));
 });
 ```
 
 **Notice: If your source files are in a folder, please set the `base` option of `gulp.src(options)` to a right path.**
+
+## Example
+
+index.html
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>gulp-file-assets</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+</body>
+</html>
+```
+
+style.css
+
+```css
+#logo {
+	background: url(../img/logo.png);
+}
+```
+
+gulpfile.js
+
+```js
+var gulp = require('gulp');
+var fileAssets = require('gulp-file-assets');
+
+gulp.task('default', function(){
+	return gulp
+		.src('index.html')
+		.pipe(fileAssets())
+		.pipe(gulp.dest('build'));
+});
+// => ['build/index.html', 'build/css/style.css', 'build/img/logo.png']
+```
 
 ## API
 
