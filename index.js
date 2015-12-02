@@ -14,7 +14,8 @@ var defTypes = {
 	js: ['js'],
 	css: ['css'],
 	page: ['html', 'tpl'],
-	img: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']
+	img: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
+	font: ['ttf', 'eot', 'otf', 'woff']
 };
 
 function merge(target, /** ..., **/ objects) {
@@ -64,20 +65,37 @@ function getAvailableExts(types) {
 	return exts;
 }
 
+function getAbsolutePath(filename) {
+	if (!path.isAbsolute(filename)) {
+		filename = path.join(process.cwd(), filename);
+	}
+	return filename;
+}
+
 function isLocal(url) {
 	return !/^(https?:)?\/\//.test(url);
 }
 
+function isIgnored(ignores, filename) {
+	for (var i = 0, l = ignores.length; i < l; ++i) {
+		var item = ignores[i];
+		if (item instanceof RegExp) {
+			if (item.test(filename)) {
+				return true;
+			}
+		} else if (item === filename) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function parseAssets(file, pattern, types, ignores, cb) {
 	var type = getFileType(types, file);
-	var filename = file.path;
-	if (!path.isAbsolute(filename)) {
-		filename = path.join(process.cwd(), filename);
-	}
-	if (!type || ignores.indexOf(filename) >= 0) {
+	if (!type) {
 		return;
 	}
-	ignores.push(filename);
+	ignores.push(file.path);
 	gutil.log('Found:', gutil.colors.green(file.relative));
 	if (type === 'js' || type === 'css' || type === 'page') {
 		var code = file.contents.toString();
@@ -86,12 +104,12 @@ function parseAssets(file, pattern, types, ignores, cb) {
 				return;
 			}
 			var files = [
-				path.join(file.base, url),
-				path.join(path.dirname(file.path), url)
+				getAbsolutePath(path.join(file.base, url)),
+				getAbsolutePath(path.join(path.dirname(file.path), url))
 			];
 			for (var i = 0, l = files.length; i < l; ++i) {
 				var filename = files[i];
-				if (fs.existsSync(filename)) {
+				if (!isIgnored(ignores, filename) && fs.existsSync(filename)) {
 					var asset = new gutil.File({
 						path: filename,
 						base: file.base,
@@ -111,13 +129,13 @@ function fileAssets(opts) {
 	var exts = getAvailableExts(types);
 	var pattern = new RegExp(ASSETS_RE.source.replace('EXT', exts.join('|')), 'ig');
 	var ignores = opts['ignores'];
-	var cwd = process.cwd();
 
 	if (ignores) {
 		ignores = ignores.concat();
 		for (var i = 0, l = ignores.length; i < l; ++i) {
-			if (!path.isAbsolute(ignores[i])) {
-				ignores[i] = path.join(cwd, ignores[i]);
+			var item = ignores[i];
+			if (!(item instanceof RegExp)) {
+				ignores[i] = getAbsolutePath(item);
 			}
 		}
 	} else {

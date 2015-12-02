@@ -3,9 +3,11 @@ var fileAssets = require('../');
 
 gulp.task('default', function () {
 	return gulp
-		.src(['fixtures/index.html', 'fixtures/html/index.html'], {
+		.src(['fixtures/index.html'], {
 			base: 'fixtures'
 		})
-		.pipe(fileAssets())
+		.pipe(fileAssets({
+			ignores: [/\.(html|tpl)$/]
+		}))
 		.pipe(gulp.dest('build'));
 });
