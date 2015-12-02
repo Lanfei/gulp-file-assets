@@ -39,6 +39,7 @@ gulp.task('default', function(){
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+	<a href="sample.html">Link</a>
 </body>
 </html>
 ```
@@ -60,7 +61,9 @@ var fileAssets = require('gulp-file-assets');
 gulp.task('default', function(){
 	return gulp
 		.src('index.html')
-		.pipe(fileAssets())
+		.pipe(fileAssets({
+			ignores: [/\.html$/]
+		}))
 		.pipe(gulp.dest('build'));
 });
 // => ['build/index.html', 'build/css/style.css', 'build/img/logo.png']
