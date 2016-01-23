@@ -58,7 +58,7 @@ gulp.task('default', function(){
 var gulp = require('gulp');
 var fileAssets = require('gulp-file-assets');
 
-gulp.task('default', function(){
+gulp.task('default', function() {
 	return gulp
 		.src('index.html')
 		.pipe(fileAssets({
