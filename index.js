@@ -107,6 +107,9 @@ function parseAssets(file, pattern, types, ignores, cb) {
 				getAbsolutePath(path.join(file.base, url)),
 				getAbsolutePath(path.join(path.dirname(file.path), url))
 			];
+			if (files[0] === files[1]) {
+				files.pop();
+			}
 			for (var i = 0, l = files.length; i < l; ++i) {
 				var filename = files[i];
 				if (!isIgnored(ignores, filename) && fs.existsSync(filename)) {

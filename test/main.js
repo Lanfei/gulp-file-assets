@@ -3,7 +3,7 @@
 var gulp = require('gulp');
 var should = require('should');
 var through = require('through2');
-var fileAssets = require('..');
+var fileAssets = require('../');
 
 describe('gulp-file-assets', function () {
 	it('should find all assets in the file', function (done) {
@@ -21,12 +21,14 @@ describe('gulp-file-assets', function () {
 			'js/inner.js'
 		];
 		gulp.src([
-			'test/fixtures/index.html',
-			'test/fixtures/html/index.html'
-		], {
-			base: 'test/fixtures'
-		})
-			.pipe(fileAssets())
+				'test/fixtures/index.html',
+				'test/fixtures/html/index.html'
+			], {
+				base: 'test/fixtures'
+			})
+			.pipe(fileAssets({
+				ignores: [/\.(html|tpl)$/]
+			}))
 			.pipe(through.obj(function (file, enc, cb) {
 				file.relative.should.equalOneOf(results);
 				++count;
@@ -48,15 +50,16 @@ describe('gulp-file-assets', function () {
 			'js/inner.js'
 		];
 		gulp.src([
-			'test/fixtures/index.html',
-			'test/fixtures/html/index.html'
-		], {
-			base: 'test/fixtures'
-		})
+				'test/fixtures/index.html',
+				'test/fixtures/html/index.html'
+			], {
+				base: 'test/fixtures'
+			})
 			.pipe(fileAssets({
 				types: {
 					img: null
-				}
+				},
+				ignores: [/\.(html|tpl)$/]
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
 				file.relative.should.equalOneOf(results);
@@ -81,13 +84,16 @@ describe('gulp-file-assets', function () {
 			'js/inner.js'
 		];
 		gulp.src([
-			'test/fixtures/index.html',
-			'test/fixtures/html/index.html'
-		], {
-			base: 'test/fixtures'
-		})
+				'test/fixtures/index.html',
+				'test/fixtures/html/index.html'
+			], {
+				base: 'test/fixtures'
+			})
 			.pipe(fileAssets({
-				ignores: ['test/fixtures/css/inner.css']
+				ignores: [
+					/\.(html|tpl)$/,
+					'test/fixtures/css/inner.css'
+				]
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
 				file.relative.should.equalOneOf(results);

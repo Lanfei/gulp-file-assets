@@ -6,6 +6,8 @@ gulp.task('default', function () {
 		.src(['index.html', 'html/index.html'], {
 			base: '.'
 		})
-		.pipe(fileAssets())
+		.pipe(fileAssets({
+			ignores: [/\.(html|tpl)$/]
+		}))
 		.pipe(gulp.dest('build'));
 });

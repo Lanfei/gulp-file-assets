@@ -74,6 +74,7 @@ gulp.task('default', function(){
 ### fileAssets(options)
 
 #### options
+
 Type: `Object`
 
 ##### options.types
@@ -81,6 +82,7 @@ Type: `Object`
 Asset types to be extracted.
 
 Type: `Object`
+
 Default:
 ```js
 {
@@ -101,9 +103,10 @@ You can also extend by yourself:
 
 ##### options.ignores
 
-A path list to ignore.
+A path or RegExp list to ignore.
 
 Type: `Array`
+
 Default: `[]`
 
 [npm-url]: https://npmjs.org/package/gulp-file-assets
