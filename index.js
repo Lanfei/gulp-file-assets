@@ -38,7 +38,8 @@ function getFileType(types, file) {
 	var keys = Object.keys(types);
 	for (var i = 0, l = keys.length; i < l; ++i) {
 		var key = keys[i];
-		if (types[key].indexOf(ext) >= 0) {
+		var exts = types[key];
+		if (exts && exts.indexOf(ext) >= 0) {
 			return key;
 		}
 	}
@@ -56,13 +57,16 @@ function getFileExt(file) {
 }
 
 function getAvailableExts(types) {
-	var exts = [];
+	var availableExts = [];
 	var keys = Object.keys(types);
 	for (var i = 0, l = keys.length; i < l; ++i) {
 		var key = keys[i];
-		exts = exts.concat(types[key]);
+		var exts = types[key];
+		if (exts) {
+			availableExts = availableExts.concat(exts);
+		}
 	}
-	return exts;
+	return availableExts;
 }
 
 function getAbsolutePath(filename) {
