@@ -96,7 +96,7 @@ function parseAssets(file, pattern, types, ignores, cb) {
 		return;
 	}
 	ignores.push(file.path);
-	gutil.log('Found:', gutil.colors.green(file.relative));
+	gutil.log(PLUGIN_NAME + ':', 'Extract', gutil.colors.green(file.relative));
 	if (type === 'js' || type === 'css' || type === 'page') {
 		var code = file.contents.toString();
 		code.replace(pattern, function ($, url) {
