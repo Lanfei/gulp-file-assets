@@ -9,5 +9,5 @@ gulp.task('default', function () {
 		.pipe(fileAssets({
 			ignores: [/\.(html|tpl)$/]
 		}))
-		.pipe(gulp.dest('build'));
+		.pipe(gulp.dest('dist'));
 });

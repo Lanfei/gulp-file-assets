@@ -20,7 +20,7 @@ gulp.task('default', function(){
 	return gulp
 		.src('index.html')
 		.pipe(fileAssets())
-		.pipe(gulp.dest('build'));
+		.pipe(gulp.dest('dist'));
 });
 ```
 
@@ -64,9 +64,9 @@ gulp.task('default', function() {
 		.pipe(fileAssets({
 			ignores: [/\.html$/]
 		}))
-		.pipe(gulp.dest('build'));
+		.pipe(gulp.dest('dist'));
 });
-// => ['build/index.html', 'build/css/style.css', 'build/img/logo.png']
+// => ['dist/index.html', 'dist/css/style.css', 'dist/img/logo.png']
 ```
 
 ## API
