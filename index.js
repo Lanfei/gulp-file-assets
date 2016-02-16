@@ -94,13 +94,13 @@ function isIgnored(ignores, filename) {
 	return false;
 }
 
-function parseAssets(file, pattern, types, ignores, cb) {
+function parseAssets(file, reference, pattern, types, ignores, cb) {
 	var type = getFileType(types, file);
 	if (!type) {
 		return;
 	}
 	ignores.push(file.path);
-	gutil.log(PLUGIN_NAME + ':', 'Extract', gutil.colors.green(file.relative));
+	gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(file.relative));
 	if (type === 'js' || type === 'css' || type === 'page') {
 		var code = file.contents.toString();
 		code.replace(pattern, function ($, url) {
@@ -122,7 +122,7 @@ function parseAssets(file, pattern, types, ignores, cb) {
 						base: file.base,
 						contents: fs.readFileSync(filename)
 					});
-					parseAssets(asset, pattern, types, ignores, cb);
+					parseAssets(asset, file.relative, pattern, types, ignores, cb);
 				}
 			}
 		});
@@ -155,7 +155,7 @@ function fileAssets(opts) {
 		} else if (file.isStream()) {
 			cb(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
 		} else if (file.isBuffer()) {
-			parseAssets(file, pattern, types, ignores, this.push.bind(this));
+			parseAssets(file, null, pattern, types, ignores, this.push.bind(this));
 			cb();
 		}
 	});
