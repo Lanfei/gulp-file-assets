@@ -7,66 +7,23 @@ var through = require('through2');
 
 const PLUGIN_NAME = 'gulp-file-assets';
 
-const EXT_RE = /.*\.(\w+)/;
 const ASSETS_RE = /([^'"# \(\)\?]+\.(EXT))\b/ig;
 
-var defTypes = {
-	js: ['js'],
-	css: ['css'],
-	page: ['html', 'tpl'],
-	img: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
-	font: ['ttf', 'eot', 'otf', 'woff']
-};
+var defExts = [
+	'js', 'css', 'html', 'tpl',
+	'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp',
+	'ttf', 'eot', 'otf', 'woff'
+];
 
-function merge(target, /** ..., **/ objects) {
-	target = target || {};
-	for (var i = 1, l = arguments.length; i < l; ++i) {
-		var object = arguments[i];
-		if (object) {
-			var keys = Object.keys(object);
-			for (var j = 0, m = keys.length; j < m; ++j) {
-				var key = keys[j];
-				target[key] = object[key];
-			}
+function getAvailableExts(includes, excludes) {
+	var exts = [];
+	for (var i = 0, l = includes.length; i < l; ++i) {
+		var ext = includes[i];
+		if (excludes.indexOf(ext) < 0) {
+			exts.push(ext);
 		}
 	}
-	return target;
-}
-
-function getFileType(types, file) {
-	var ext = getFileExt(file);
-	var keys = Object.keys(types);
-	for (var i = 0, l = keys.length; i < l; ++i) {
-		var key = keys[i];
-		var exts = types[key];
-		if (exts && exts.indexOf(ext) >= 0) {
-			return key;
-		}
-	}
-	return null;
-}
-
-function getFileExt(file) {
-	var filename;
-	if (file instanceof Object) {
-		filename = file.relative || file.path;
-	} else {
-		filename = file;
-	}
-	return filename.replace(EXT_RE, '$1').toLowerCase();
-}
-
-function getAvailableExts(types) {
-	var availableExts = [];
-	var keys = Object.keys(types);
-	for (var i = 0, l = keys.length; i < l; ++i) {
-		var key = keys[i];
-		var exts = types[key];
-		if (exts) {
-			availableExts = availableExts.concat(exts);
-		}
-	}
-	return availableExts;
+	return exts;
 }
 
 function getAbsolutePath(filename) {
@@ -94,15 +51,14 @@ function isIgnored(ignores, filename) {
 	return false;
 }
 
-function parseAssets(file, reference, pattern, types, ignores, push) {
-	var type = getFileType(types, file);
-	if (!type) {
+function parseAssets(file, reference, pattern, ignores, includeSrc, push) {
+	if (isIgnored(ignores, file.path)) {
 		return;
 	}
 	ignores.push(file.path);
-	gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(file.relative));
-	if (type === 'js' || type === 'css' || type === 'page') {
-		var code = file.contents.toString();
+	var contents = file.contents;
+	var code = contents.toString();
+	if (new Buffer(code).length === contents.length) {
 		code.replace(pattern, function ($, url) {
 			if (!isLocal(url)) {
 				return;
@@ -116,25 +72,28 @@ function parseAssets(file, reference, pattern, types, ignores, push) {
 			}
 			for (var i = 0, l = files.length; i < l; ++i) {
 				var filename = files[i];
-				if (!isIgnored(ignores, filename) && fs.existsSync(filename)) {
+				if (fs.existsSync(filename)) {
 					var asset = new gutil.File({
 						path: filename,
 						base: file.base,
 						contents: fs.readFileSync(filename)
 					});
-					parseAssets(asset, file.relative, pattern, types, ignores, push);
+					parseAssets(asset, file.relative, pattern, ignores, includeSrc, push);
 				}
 			}
 		});
 	}
-	push(file);
+	if (reference || includeSrc) {
+		push(file);
+		gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(file.relative));
+	}
 }
 
 function fileAssets(opts) {
 	opts = opts || {};
-	var types = merge({}, defTypes, opts['types']);
-	var exts = getAvailableExts(types);
+	var exts = getAvailableExts(opts['exts'] || defExts, opts['excludes'] || []);
 	var pattern = new RegExp(ASSETS_RE.source.replace('EXT', exts.join('|')), 'ig');
+	var includeSrc = opts['includeSrc'] === undefined || opts['includeSrc'];
 	var ignores = opts['ignores'];
 
 	if (ignores) {
@@ -155,7 +114,7 @@ function fileAssets(opts) {
 		} else if (file.isStream()) {
 			cb(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
 		} else if (file.isBuffer()) {
-			parseAssets(file, null, pattern, types, ignores, this.push.bind(this));
+			parseAssets(file, null, pattern, ignores, includeSrc, this.push.bind(this));
 			cb();
 		}
 	});

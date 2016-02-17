@@ -21,13 +21,40 @@ describe('gulp-file-assets', function () {
 			'js/inner.js'
 		];
 		gulp.src([
-				'test/fixtures/index.html',
+				'test/fixtures/index.html'
+			], {
+				base: 'test/fixtures'
+			})
+			.pipe(fileAssets())
+			.pipe(through.obj(function (file, enc, cb) {
+				file.relative.should.equalOneOf(results);
+				++count;
+				cb();
+			}, function () {
+				count.should.equal(results.length);
+				done();
+			}));
+	});
+
+	it('should not include source files', function (done) {
+		var count = 0;
+		var results = [
+			'css/style.css',
+			'css/inner.css',
+			'img/avatar1.jpg',
+			'img/avatar2.jpg',
+			'img/avatar3.jpg',
+			'img/avatar4.jpg',
+			'js/script.js',
+			'js/inner.js'
+		];
+		gulp.src([
 				'test/fixtures/html/index.html'
 			], {
 				base: 'test/fixtures'
 			})
 			.pipe(fileAssets({
-				ignores: [/\.(html|tpl)$/]
+				includeSrc: false
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
 				file.relative.should.equalOneOf(results);
@@ -56,10 +83,7 @@ describe('gulp-file-assets', function () {
 				base: 'test/fixtures'
 			})
 			.pipe(fileAssets({
-				types: {
-					img: null
-				},
-				ignores: [/\.(html|tpl)$/]
+				excludes: ['jpg', 'png', 'gif']
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
 				file.relative.should.equalOneOf(results);
@@ -91,7 +115,6 @@ describe('gulp-file-assets', function () {
 			})
 			.pipe(fileAssets({
 				ignores: [
-					/\.(html|tpl)$/,
 					'test/fixtures/css/inner.css'
 				]
 			}))

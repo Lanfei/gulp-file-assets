@@ -2,6 +2,8 @@
 
 > A gulp plugin to extract file assets.
 
+**Attention: Version 2.0.0+ is not compatible with 1.0.0+.**
+
 ## Usage
 
 First, install `gulp-file-assets` as a development dependency:
@@ -62,7 +64,7 @@ gulp.task('default', function() {
 	return gulp
 		.src('index.html')
 		.pipe(fileAssets({
-			ignores: [/\.html$/]
+			excludes: ['html']
 		}))
 		.pipe(gulp.dest('dist'));
 });
@@ -77,33 +79,42 @@ gulp.task('default', function() {
 
 Type: `Object`
 
-##### options.types
+##### options.exts
 
-Asset types to be extracted.
+File extensions to be extracted.
 
-Type: `Object`
+Type: `Array`
 
 Default:
 ```js
-{
-	js: ['js'],
-	css: ['css'],
-	page: ['html', 'tpl'],
-	img: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']
-}
+[
+	'js', 'css', 'html', 'tpl',
+	'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp',
+	'ttf', 'eot', 'otf', 'woff'
+]
 ```
+##### options.excludes
 
-You can also extend by yourself:
+File extensions to be excluded.
 
+Type: `Array`
+
+Default:
 ```js
-{
-	text: ['md', 'txt']
-}
+[]
 ```
+
+##### options.includeSrc
+
+Whether to put the source files to the pipeline.
+
+Type: `Boolean`
+
+Default: `true`
 
 ##### options.ignores
 
-A path or RegExp list to ignore.
+A file path/RegExp list to be ignored.
 
 Type: `Array`
 
