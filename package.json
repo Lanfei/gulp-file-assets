@@ -1,6 +1,6 @@
 {
   "name": "gulp-file-assets",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A gulp plugin to extract file assets.",
   "main": "index.js",
   "scripts": {

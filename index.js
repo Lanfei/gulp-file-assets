@@ -94,7 +94,7 @@ function isIgnored(ignores, filename) {
 	return false;
 }
 
-function parseAssets(file, reference, pattern, types, ignores, cb) {
+function parseAssets(file, reference, pattern, types, ignores, push) {
 	var type = getFileType(types, file);
 	if (!type) {
 		return;
@@ -122,12 +122,12 @@ function parseAssets(file, reference, pattern, types, ignores, cb) {
 						base: file.base,
 						contents: fs.readFileSync(filename)
 					});
-					parseAssets(asset, file.relative, pattern, types, ignores, cb);
+					parseAssets(asset, file.relative, pattern, types, ignores, push);
 				}
 			}
 		});
 	}
-	cb(file);
+	push(file);
 }
 
 function fileAssets(opts) {
