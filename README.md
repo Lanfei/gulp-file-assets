@@ -99,10 +99,7 @@ File extensions to be excluded.
 
 Type: `Array`
 
-Default:
-```js
-[]
-```
+Default: `[]`
 
 ##### options.includeSrc
 
