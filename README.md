@@ -109,6 +109,14 @@ Type: `Boolean`
 
 Default: `true`
 
+##### options.depth
+
+The depth of files to extract.
+
+Type: `Number`
+
+Default: `null`
+
 ##### options.ignores
 
 A file path/RegExp list to be ignored.

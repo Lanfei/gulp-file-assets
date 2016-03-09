@@ -6,7 +6,7 @@ var through = require('through2');
 var fileAssets = require('../');
 
 describe('gulp-file-assets', function () {
-	it('should find all assets in the file', function (done) {
+	it('should exact all assets in the file', function (done) {
 		var count = 0;
 		var results = [
 			'index.html',
@@ -26,6 +26,33 @@ describe('gulp-file-assets', function () {
 				base: 'test/fixtures'
 			})
 			.pipe(fileAssets())
+			.pipe(through.obj(function (file, enc, cb) {
+				file.relative.should.equalOneOf(results);
+				++count;
+				cb();
+			}, function () {
+				count.should.equal(results.length);
+				done();
+			}));
+	});
+
+	it('should only extract assets by offering depth', function (done) {
+		var count = 0;
+		var results = [
+			'index.html',
+			'html/index.html',
+			'css/style.css',
+			'img/avatar3.jpg',
+			'js/script.js'
+		];
+		gulp.src([
+				'test/fixtures/index.html'
+			], {
+				base: 'test/fixtures'
+			})
+			.pipe(fileAssets({
+				depth: 1
+			}))
 			.pipe(through.obj(function (file, enc, cb) {
 				file.relative.should.equalOneOf(results);
 				++count;

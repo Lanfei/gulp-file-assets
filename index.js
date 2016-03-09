@@ -51,11 +51,26 @@ function isIgnored(ignores, filename) {
 	return false;
 }
 
-function parseAssets(file, reference, pattern, ignores, includeSrc, push) {
+function parseAssets(file, reference, curDepth, opts, push) {
+	var depth = opts['depth'];
+	var pattern = opts['pattern'];
+	var ignores = opts['ignores'];
+	var includeSrc = opts['includeSrc'];
+
 	if (isIgnored(ignores, file.path)) {
 		return;
 	}
-	ignores.push(file.path);
+
+	if (reference || includeSrc) {
+		push(file);
+		ignores.push(file.path);
+		gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(file.relative));
+	}
+
+	if (depth > 0 && curDepth >= depth) {
+		return;
+	}
+
 	var contents = file.contents;
 	var code = contents.toString();
 	if (new Buffer(code).length === contents.length) {
@@ -78,19 +93,16 @@ function parseAssets(file, reference, pattern, ignores, includeSrc, push) {
 						base: file.base,
 						contents: fs.readFileSync(filename)
 					});
-					parseAssets(asset, file.relative, pattern, ignores, includeSrc, push);
+					parseAssets(asset, file.relative, curDepth + 1, opts, push);
 				}
 			}
 		});
-	}
-	if (reference || includeSrc) {
-		push(file);
-		gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(file.relative));
 	}
 }
 
 function fileAssets(opts) {
 	opts = opts || {};
+	var depth = opts['depth'] || null;
 	var exts = getAvailableExts(opts['exts'] || defExts, opts['excludes'] || []);
 	var pattern = new RegExp(ASSETS_RE.source.replace('EXT', exts.join('|')), 'ig');
 	var includeSrc = opts['includeSrc'] === undefined || opts['includeSrc'];
@@ -114,7 +126,12 @@ function fileAssets(opts) {
 		} else if (file.isStream()) {
 			cb(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
 		} else if (file.isBuffer()) {
-			parseAssets(file, null, pattern, ignores, includeSrc, this.push.bind(this));
+			parseAssets(file, null, 0, {
+				depth: depth,
+				pattern: pattern,
+				ignores: ignores,
+				includeSrc: includeSrc
+			}, this.push.bind(this));
 			cb();
 		}
 	});
