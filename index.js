@@ -57,21 +57,25 @@ function parseAssets(file, reference, curDepth, opts, push) {
 	var ignores = opts['ignores'];
 	var includeSrc = opts['includeSrc'];
 
-	if (isIgnored(ignores, file.path)) {
+	var fileBase = file.base;
+	var filePath = file.path;
+	var relative = file.relative;
+	var contents = file.contents;
+
+	if (isIgnored(ignores, filePath)) {
 		return;
 	}
 
 	if (reference || includeSrc) {
 		push(file);
-		ignores.push(file.path);
-		gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(file.relative));
+		ignores.push(filePath);
+		gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(relative));
 	}
 
 	if (depth > 0 && curDepth >= depth) {
 		return;
 	}
 
-	var contents = file.contents;
 	var code = contents.toString();
 	if (new Buffer(code).length === contents.length) {
 		code.replace(pattern, function ($, url) {
@@ -79,8 +83,8 @@ function parseAssets(file, reference, curDepth, opts, push) {
 				return;
 			}
 			var files = [
-				getAbsolutePath(path.join(file.base, url)),
-				getAbsolutePath(path.join(path.dirname(file.path), url))
+				getAbsolutePath(path.join(fileBase, url)),
+				getAbsolutePath(path.join(path.dirname(filePath), url))
 			];
 			if (files[0] === files[1]) {
 				files.pop();
@@ -90,10 +94,10 @@ function parseAssets(file, reference, curDepth, opts, push) {
 				if (fs.existsSync(filename)) {
 					var asset = new gutil.File({
 						path: filename,
-						base: file.base,
+						base: fileBase,
 						contents: fs.readFileSync(filename)
 					});
-					parseAssets(asset, file.relative, curDepth + 1, opts, push);
+					parseAssets(asset, relative, curDepth + 1, opts, push);
 				}
 			}
 		});
