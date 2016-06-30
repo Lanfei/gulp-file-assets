@@ -141,4 +141,6 @@ function fileAssets(opts) {
 	});
 }
 
+fileAssets.defExts = defExts;
+
 module.exports = fileAssets;
