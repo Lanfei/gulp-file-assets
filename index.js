@@ -5,9 +5,9 @@ var path = require('path');
 var gutil = require('gulp-util');
 var through = require('through2');
 
-const PLUGIN_NAME = 'gulp-file-assets';
+var PLUGIN_NAME = 'gulp-file-assets';
 
-const ASSETS_RE = /([^'"# \(\)\?]+\.(EXT))\b/ig;
+var ASSETS_RE = /([^'"# \(\)\?]+\.(EXT))\b/ig;
 
 var defExts = [
 	'js', 'css', 'html', 'tpl',
