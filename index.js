@@ -2,12 +2,15 @@
 
 var fs = require('fs');
 var path = require('path');
-var gutil = require('gulp-util');
+var Vinyl = require('vinyl');
+var log = require('fancy-log');
 var through = require('through2');
+var colors = require('ansi-colors');
+var PluginError = require('plugin-error');
 
 var PLUGIN_NAME = 'gulp-file-assets';
 
-var ASSETS_RE = /([^'"# \(\)\?]+\.(EXT))\b/ig;
+var ASSETS_RE = /([^'"# ()?]+\.(EXT))\b/ig;
 
 var defExts = [
 	'js', 'css', 'html', 'tpl',
@@ -67,7 +70,7 @@ function parseAssets(file, reference, curDepth, opts, push) {
 	}
 
 	if (reference || includeSrc) {
-		gutil.log(PLUGIN_NAME + ':', 'Extract', (reference ? gutil.colors.green(reference) + ' -> ' : '') + gutil.colors.green(relative));
+		log(PLUGIN_NAME + ':', 'Extract', (reference ? colors.green(reference) + ' -> ' : '') + colors.green(relative));
 		ignores.push(filePath);
 		push(file);
 	}
@@ -77,7 +80,7 @@ function parseAssets(file, reference, curDepth, opts, push) {
 	}
 
 	var code = contents.toString();
-	if (new Buffer(code).length === contents.length) {
+	if (Buffer.from(code).length === contents.length) {
 		code.replace(pattern, function ($, url) {
 			if (!isLocal(url)) {
 				return;
@@ -92,7 +95,7 @@ function parseAssets(file, reference, curDepth, opts, push) {
 			for (var i = 0, l = files.length; i < l; ++i) {
 				var filename = files[i];
 				if (fs.existsSync(filename)) {
-					var asset = new gutil.File({
+					var asset = new Vinyl({
 						path: filename,
 						base: fileBase,
 						contents: fs.readFileSync(filename)
@@ -128,7 +131,7 @@ function fileAssets(opts) {
 		if (file.isNull()) {
 			return cb();
 		} else if (file.isStream()) {
-			cb(new gutil.PluginError(PLUGIN_NAME, 'Streaming not supported'));
+			cb(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
 		} else if (file.isBuffer()) {
 			parseAssets(file, null, 0, {
 				depth: depth,
