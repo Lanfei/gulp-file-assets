@@ -1,4 +1,4 @@
-# gulp-file-assets [![NPM version][npm-image]][npm-url]
+# gulp-file-assets · [![Build Status][build-image]][build-url] [![Coverage Status][coverage-image]][coverage-url] [![Version][version-image]][version-url] [![License][license-image]][license-url]
 
 > A gulp plugin to extract file assets.
 
@@ -125,5 +125,11 @@ Type: `Array`
 
 Default: `[]`
 
-[npm-url]: https://npmjs.org/package/gulp-file-assets
-[npm-image]: https://badge.fury.io/js/gulp-file-assets.svg
+[build-url]: https://circleci.com/gh/Lanfei/gulp-file-assets
+[build-image]: https://img.shields.io/circleci/project/github/Lanfei/gulp-file-assets.svg
+[coverage-url]: https://codecov.io/github/Lanfei/gulp-file-assets
+[coverage-image]: https://img.shields.io/codecov/c/github/Lanfei/gulp-file-assets.svg
+[version-url]: https://npmjs.org/package/gulp-file-assets
+[version-image]: https://img.shields.io/npm/v/gulp-file-assets.svg
+[license-url]: https://github.com/Lanfei/gulp-file-assets/blob/master/LICENSE
+[license-image]: https://img.shields.io/npm/l/gulp-file-assets.svg

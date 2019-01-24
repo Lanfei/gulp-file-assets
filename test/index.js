@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
-var should = require('should');
+var expect = require('expect.js');
 var through = require('through2');
 var fileAssets = require('../');
 
@@ -20,18 +20,14 @@ describe('gulp-file-assets', function () {
 			'js/script.js',
 			'js/inner.js'
 		];
-		gulp.src([
-				'test/fixtures/index.html'
-			], {
-				base: 'test/fixtures'
-			})
+		gulp.src(['test/fixtures/index.html'], {base: 'test/fixtures'})
 			.pipe(fileAssets())
 			.pipe(through.obj(function (file, enc, cb) {
-				file.relative.should.equalOneOf(results);
+				expect(results).to.contain(file.relative);
 				++count;
 				cb();
 			}, function () {
-				count.should.equal(results.length);
+				expect(count).to.equal(results.length);
 				done();
 			}));
 	});
@@ -45,20 +41,16 @@ describe('gulp-file-assets', function () {
 			'img/avatar3.jpg',
 			'js/script.js'
 		];
-		gulp.src([
-				'test/fixtures/index.html'
-			], {
-				base: 'test/fixtures'
-			})
+		gulp.src(['test/fixtures/index.html'], {base: 'test/fixtures'})
 			.pipe(fileAssets({
 				depth: 1
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				file.relative.should.equalOneOf(results);
+				expect(results).to.contain(file.relative);
 				++count;
 				cb();
 			}, function () {
-				count.should.equal(results.length);
+				expect(count).to.equal(results.length);
 				done();
 			}));
 	});
@@ -75,20 +67,16 @@ describe('gulp-file-assets', function () {
 			'js/script.js',
 			'js/inner.js'
 		];
-		gulp.src([
-				'test/fixtures/html/index.html'
-			], {
-				base: 'test/fixtures'
-			})
+		gulp.src(['test/fixtures/html/index.html'], {base: 'test/fixtures'})
 			.pipe(fileAssets({
 				includeSrc: false
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				file.relative.should.equalOneOf(results);
+				expect(results).to.contain(file.relative);
 				++count;
 				cb();
 			}, function () {
-				count.should.equal(results.length);
+				expect(count).to.equal(results.length);
 				done();
 			}));
 	});
@@ -103,21 +91,16 @@ describe('gulp-file-assets', function () {
 			'js/script.js',
 			'js/inner.js'
 		];
-		gulp.src([
-				'test/fixtures/index.html',
-				'test/fixtures/html/index.html'
-			], {
-				base: 'test/fixtures'
-			})
+		gulp.src(['test/fixtures/index.html', 'test/fixtures/html/index.html'], {base: 'test/fixtures'})
 			.pipe(fileAssets({
 				excludes: ['jpg', 'png', 'gif']
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				file.relative.should.equalOneOf(results);
+				expect(results).to.contain(file.relative);
 				++count;
 				cb();
 			}, function () {
-				count.should.equal(results.length);
+				expect(count).to.equal(results.length);
 				done();
 			}));
 	});
@@ -128,29 +111,22 @@ describe('gulp-file-assets', function () {
 			'index.html',
 			'html/index.html',
 			'css/style.css',
-			'img/avatar1.jpg',
-			'img/avatar3.jpg',
-			'img/avatar4.jpg',
 			'js/script.js',
 			'js/inner.js'
 		];
-		gulp.src([
-				'test/fixtures/index.html',
-				'test/fixtures/html/index.html'
-			], {
-				base: 'test/fixtures'
-			})
+		gulp.src(['test/fixtures/index.html', 'test/fixtures/html/index.html'], {base: 'test/fixtures'})
 			.pipe(fileAssets({
 				ignores: [
-					'test/fixtures/css/inner.css'
+					'test/fixtures/css/inner.css',
+					/^.*\.jpg$/
 				]
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				file.relative.should.equalOneOf(results);
+				expect(results).to.contain(file.relative);
 				++count;
 				cb();
 			}, function () {
-				count.should.equal(results.length);
+				expect(count).to.equal(results.length);
 				done();
 			}));
 	});
