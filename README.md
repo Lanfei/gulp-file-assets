@@ -9,7 +9,7 @@
 First, install `gulp-file-assets` as a development dependency:
 
 ```shell
-$ npm install --save-dev gulp-file-assets
+npm install --save-dev gulp-file-assets
 ```
 
 Then, add it to your `gulpfile.js`:
