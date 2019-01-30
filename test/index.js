@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var through = require('through2');
+var assert = require('chai').assert;
 var fileAssets = require('../');
 
 describe('gulp-file-assets', function () {
