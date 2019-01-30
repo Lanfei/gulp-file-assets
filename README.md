@@ -1,4 +1,11 @@
-# gulp-file-assets · [![Build Status][build-image]][build-url] [![Coverage Status][coverage-image]][coverage-url] [![Version][version-image]][version-url] [![License][license-image]][license-url]
+# gulp-file-assets
+
+[![Build Status][build-image]][build-url]
+[![Coverage Status][coverage-image]][coverage-url]
+[![Version][version-image]][version-url]
+[![License][license-image]][license-url]
+[![Dependencies][dep-image]][dep-url]
+[![DevDependencies][dev-dep-image]][dev-dep-url]
 
 > A gulp plugin to extract file assets.
 
@@ -133,3 +140,7 @@ Default: `[]`
 [version-image]: https://img.shields.io/npm/v/gulp-file-assets.svg
 [license-url]: https://github.com/Lanfei/gulp-file-assets/blob/master/LICENSE
 [license-image]: https://img.shields.io/npm/l/gulp-file-assets.svg
+[dep-url]: https://david-dm.org/Lanfei/gulp-file-assets
+[dep-image]: https://david-dm.org/Lanfei/gulp-file-assets/status.svg
+[dev-dep-url]: https://david-dm.org/Lanfei/gulp-file-assets?type=dev
+[dev-dep-image]: https://david-dm.org/Lanfei/gulp-file-assets/dev-status.svg

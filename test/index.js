@@ -1,7 +1,6 @@
 'use strict';
 
 var gulp = require('gulp');
-var expect = require('expect.js');
 var through = require('through2');
 var fileAssets = require('../');
 
@@ -23,11 +22,11 @@ describe('gulp-file-assets', function () {
 		gulp.src(['test/fixtures/index.html'], {base: 'test/fixtures'})
 			.pipe(fileAssets())
 			.pipe(through.obj(function (file, enc, cb) {
-				expect(results).to.contain(file.relative);
+				assert.include(results, file.relative);
 				++count;
 				cb();
 			}, function () {
-				expect(count).to.equal(results.length);
+				assert.strictEqual(count, results.length);
 				done();
 			}));
 	});
@@ -46,11 +45,11 @@ describe('gulp-file-assets', function () {
 				depth: 1
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				expect(results).to.contain(file.relative);
+				assert.include(results, file.relative);
 				++count;
 				cb();
 			}, function () {
-				expect(count).to.equal(results.length);
+				assert.strictEqual(count, results.length);
 				done();
 			}));
 	});
@@ -72,11 +71,11 @@ describe('gulp-file-assets', function () {
 				includeSrc: false
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				expect(results).to.contain(file.relative);
+				assert.include(results, file.relative);
 				++count;
 				cb();
 			}, function () {
-				expect(count).to.equal(results.length);
+				assert.strictEqual(count, results.length);
 				done();
 			}));
 	});
@@ -96,11 +95,11 @@ describe('gulp-file-assets', function () {
 				excludes: ['jpg', 'png', 'gif']
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				expect(results).to.contain(file.relative);
+				assert.include(results, file.relative);
 				++count;
 				cb();
 			}, function () {
-				expect(count).to.equal(results.length);
+				assert.strictEqual(count, results.length);
 				done();
 			}));
 	});
@@ -122,11 +121,11 @@ describe('gulp-file-assets', function () {
 				]
 			}))
 			.pipe(through.obj(function (file, enc, cb) {
-				expect(results).to.contain(file.relative);
+				assert.include(results, file.relative);
 				++count;
 				cb();
 			}, function () {
-				expect(count).to.equal(results.length);
+				assert.strictEqual(count, results.length);
 				done();
 			}));
 	});
